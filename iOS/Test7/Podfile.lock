@@ -1,0 +1,45 @@
+PODS:
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
+  - geos (3.7.0)
+  - proj4 (4.8.0)
+  - spatialite (4.1.1):
+    - spatialite/standard (= 4.1.1)
+  - spatialite/core (4.1.1):
+    - sqlite3
+  - spatialite/geos (4.1.1):
+    - geos
+    - spatialite/core
+  - spatialite/proj4 (4.1.1):
+    - proj4
+    - spatialite/core
+  - spatialite/standard (4.1.1):
+    - spatialite/geos
+    - spatialite/proj4
+  - sqlite3 (3.25.2):
+    - sqlite3/common (= 3.25.2)
+  - sqlite3/common (3.25.2)
+
+DEPENDENCIES:
+  - FMDB
+  - spatialite
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - FMDB
+    - geos
+    - proj4
+    - spatialite
+    - sqlite3
+
+SPEC CHECKSUMS:
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  geos: de7d149482a5798a4b5cfda2f0dbabd5a23f2591
+  proj4: 234525105d05a33b2ae9a90a6fe3935f7a246f7e
+  spatialite: 3f7ab5010c97a53c3dbc1be4615cc95c6dbc7ed6
+  sqlite3: 10d61a910ba79c5fe4f3c14dc022242384968a78
+
+PODFILE CHECKSUM: b0f421f0a4f7e6a6bc7c373a5a45bcef64c36a3d
+
+COCOAPODS: 1.5.3
