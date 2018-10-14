@@ -13,9 +13,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        test_C()
+        test_insert()
+//        test_C()
         
-        test_FMDB()
+//        test_FMDB()
         
         test_SQLiteDB()
         print("ok")
@@ -63,6 +64,8 @@ class ViewController: UIViewController {
                     //取出i位置存储的值,作为字典的值value
                     let cValue = sqlite3_column_text(stmt, i)
                     let value = String(cString:cValue!)
+                    
+                    print(value)
                     dict[key] = value as AnyObject
                     
                 }
@@ -110,6 +113,60 @@ class ViewController: UIViewController {
         }
         
         database.close()
+    }
+    
+    
+    ///
+    /// 测试 SQLiteDB 工具
+    ///
+    func test_insert() {
+        let path = Bundle.main.path(forResource: "s1", ofType: "sqlite")!
+        let fileURL = URL(fileURLWithPath: path)
+        print(path)
+        
+        let db = SQLiteDB.shared
+        let res = db.open(dbPath: path, copyFile: false)
+        if !res {
+            print("数据库打开失败！")
+            return
+        }
+        
+        // 测试 module RTREE
+        let x = sqlite3_compileoption_used("SQLITE_ENABLE_RTREE")
+        print("SQLITE_ENABLE_RTREE")
+        print(x)
+        
+        // 初始化 spatialite
+        let conn = spatialite_alloc_connection()
+        spatialite_init_ex(db.db, conn, 1)
+        spatialite_init_geos()
+        
+        var re = -1
+        
+        // 查询
+        re = db.execute(sql: "INSERT INTO suzhou (name, geometry) VALUES ('dd', PointFromText('POINT(120.572907 31.856495)', 4490))")
+        re = db.execute(sql: "INSERT INTO suzhou (name) VALUES ('dd')")
+        re = db.execute(sql: "INSERT INTO t1 (f1) VALUES ('dd')")
+        re = db.execute(sql: "INSERT INTO t1 (f1) VALUES ('dd')")
+        
+        // 查询
+        let data = db.query(sql: "SELECT AsText(geometry) geometry FROM suzhou")
+//        let data = db.query(sql: "SELECT f1 geometry FROM t1")
+
+        for row in data {
+            if let name = row["geometry"] {
+                print(name)
+            }
+        }
+
+//        let row = data[0]
+//        if let name = row["geometry"] {
+//            print(name)
+//        }
+        
+        db.closeDB()
+        
+        print("ok")
     }
     
     ///
