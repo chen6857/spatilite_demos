@@ -6,7 +6,6 @@ target 'Test7' do
   use_frameworks!
 
   # Pods for GeoPackage-iOS-example
-  #pod 'geopackage-ios', '~> 3.0.0'
   #pod 'SpatialDBKit'
   pod 'spatialite'
   pod 'FMDB'
