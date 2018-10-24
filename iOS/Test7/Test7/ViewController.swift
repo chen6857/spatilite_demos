@@ -13,16 +13,36 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        test_insert()
-//        test_C()
+//        test_insert()
+        test_C()
         
 //        test_FMDB()
         
-        test_SQLiteDB()
+//        test_SQLiteDB()
         print("ok")
     }
     
     
+    ///
+    /// 测试 原生C接口
+    ///
+    func test_create_C() {
+        print(Bundle.main.resourcePath)
+        print(Bundle.main.bundlePath)
+        let path = Bundle.main.bundlePath + "/new.sqlite"
+        var db: OpaquePointer? = nil
+        
+        let r = sqlite3_open_v2(path, &db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nil)
+          guard r == SQLITE_OK else {
+            print("Unable to open database")
+            return
+        }
+        
+        // 初始化 spatialite
+        let conn = spatialite_alloc_connection()
+//        spatialite_init(1) // 错误，不再使用
+        spatialite_init_ex(db, conn, 1)
+    }
     ///
     /// 测试 原生C接口
     ///
@@ -32,6 +52,7 @@ class ViewController: UIViewController {
         
         var db: OpaquePointer? = nil
         let r = sqlite3_open(path, &db)
+        
         guard r == SQLITE_OK else {
             print("Unable to open database")
             return
@@ -173,9 +194,12 @@ class ViewController: UIViewController {
     /// 测试 SQLiteDB 工具
     ///
     func test_SQLiteDB() {
-        let path = Bundle.main.path(forResource: "s1", ofType: "sqlite")!
+        print(Bundle.main.resourcePath)
+//        let path = Bundle.main.path(forResource: "s1", ofType: "sqlite")!
+//        let path = Bundle.main.path(forResource: "g1", ofType: "gpkg")!
+
 //        let fileURL = URL(fileURLWithPath: path)
-        
+        let path = "new.sqlite"
         let db = SQLiteDB.shared
         let res = db.open(dbPath: path, copyFile: false)
         if !res {
@@ -188,7 +212,29 @@ class ViewController: UIViewController {
         spatialite_init_ex(db.db, conn, 1)
         
         // 查询
-        let data = db.query(sql: "SELECT asText(geometry) geometry FROM suzhou")
+        print(db.query(sql: "select HasGeos()"))
+        print(db.query(sql: "select HasGeosAdvanced()"))
+        print(db.query(sql: "select CheckGeoPackageMetaData()"))
+        print(db.query(sql: "select gpkgCreateBaseTables()"))
+
+        print(db.query(sql: "select gpkgGetImageType()"))
+
+
+
+        print(db.query(sql: "select HasGeoPackage()"))
+        print(db.query(sql: "SELECT EnableGpkgMode()"))
+        print(db.query(sql: "SELECT GetGpkgMode()"))
+
+        print(db.query(sql: "select CheckSpatialMetaData()"))
+
+        print(db.query(sql: "SELECT EnableGpkgAmphibiousMode()"))
+        print(db.query(sql: "select GetGpkgAmphibiousMode()"))
+        print(db.query(sql: "SELECT EnableGpkgAmphibiousMode()"))
+        
+        print(db.query(sql: "select CheckSpatialMetaData()"))
+
+//        let data = db.query(sql: "SELECT count(*) geometry FROM suzhou")
+        let data = db.query(sql: "SELECT st_astext(geometry) geometry FROM suzhou")
         let row = data[0]
         if let name = row["geometry"] {
             print(name)
